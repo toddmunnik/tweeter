@@ -25,10 +25,12 @@
 {
     [super viewDidLoad];
     
+    [self buildAccountStore];
+    
     [[self tableView]setDataSource:self];
     [[self tableView]setDelegate:self];
     [[self tweetText]setDelegate:self];
-
+    
     [self fetchTweets];
 }
 
@@ -44,6 +46,42 @@
         accountStore = [[ACAccountStore alloc] init];
         
         accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    }
+    
+    [accountStore requestAccessToAccountsWithType:accountType options:nil
+                                       completion:^(BOOL granted, NSError *error)
+     {
+         if (granted == YES)
+         {
+             // Get the list of Twitter accounts.
+             NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
+             
+             if ([accountsArray count] == 0) {
+                 [self showAlert];
+             }
+         }
+         else {
+             [self showAlert];
+         }
+     }];
+}
+
+- (void)showAlert {
+    UIAlertView *alert = [[UIAlertView alloc]
+                          
+                          initWithTitle:@"Twitter Account not found"
+                          message:@"You are not logged into Twitter on this device. Add a Twitter account under Settings, Twitter"
+                          delegate:nil
+                          cancelButtonTitle:@"Dismiss"
+                          otherButtonTitles:nil];
+    alert.delegate = self;
+    
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == [alertView cancelButtonIndex]) {
+        exit(0);
     }
 }
 
@@ -66,7 +104,7 @@
     }
     
     Tweet *tweet = [arrayOfTweets objectAtIndex:indexPath.row];
-
+    
     cell.textLabel.text = tweet.text;
     cell.detailTextLabel.text = tweet.status;
     
@@ -75,8 +113,6 @@
 
 - (void)fetchTweets
 {
-    [self buildAccountStore];
-    
     [accountStore requestAccessToAccountsWithType:accountType options:nil
                                        completion:^(BOOL granted, NSError *error)
      {
@@ -86,48 +122,48 @@
              NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
              
              if ([accountsArray count] > 0) {
-    
-                ACAccount *twitterAccount = [accountsArray objectAtIndex:0];
-                NSURL *requestURL = [NSURL URLWithString:@"http://api.twitter.com/1/statuses/user_timeline.json"];
-                
-                NSMutableDictionary *parameters =
-                [[NSMutableDictionary alloc] init];
-                [parameters setObject:@"10" forKey:@"count"];
-                [parameters setObject:@"0" forKey:@"include_entities"];
-                
-                SLRequest *postRequest = [SLRequest
-                                          requestForServiceType:SLServiceTypeTwitter
-                                          requestMethod:SLRequestMethodGET
-                                          URL:requestURL parameters:parameters];
-                
-                postRequest.account = twitterAccount;
-                
-                [postRequest performRequestWithHandler:
-                 ^(NSData *responseData, NSHTTPURLResponse
-                   *urlResponse, NSError *error)
-                 {
-                     NSArray *result = [NSJSONSerialization
-                                        JSONObjectWithData:responseData
-                                        options:NSJSONReadingMutableLeaves
-                                        error:&error];
-                     
-                     if (result.count != 0) {
-                         
-                         arrayOfTweets = [[NSMutableArray alloc] init];
-                         
-                         for(NSDictionary *item in result) {
-                             
-                             //build arrayOfTweets from result
-                             Tweet *tweet = [[Tweet alloc] init];
-                             tweet.text = [item objectForKey:@"text"];
-                             tweet.status = @"Success";
-                             
-                             [arrayOfTweets addObject:tweet];
-                         }
-                         [self reloadTable];
-                     }
-                 }];
-            }
+                 
+                 ACAccount *twitterAccount = [accountsArray objectAtIndex:0];
+                 NSURL *requestURL = [NSURL URLWithString:@"http://api.twitter.com/1/statuses/user_timeline.json"];
+                 
+                 NSMutableDictionary *parameters =
+                 [[NSMutableDictionary alloc] init];
+                 [parameters setObject:@"10" forKey:@"count"];
+                 [parameters setObject:@"0" forKey:@"include_entities"];
+                 
+                 SLRequest *postRequest = [SLRequest
+                                           requestForServiceType:SLServiceTypeTwitter
+                                           requestMethod:SLRequestMethodGET
+                                           URL:requestURL parameters:parameters];
+                 
+                 postRequest.account = twitterAccount;
+                 
+                 [postRequest performRequestWithHandler:
+                  ^(NSData *responseData, NSHTTPURLResponse
+                    *urlResponse, NSError *error)
+                  {
+                      NSArray *result = [NSJSONSerialization
+                                         JSONObjectWithData:responseData
+                                         options:NSJSONReadingMutableLeaves
+                                         error:&error];
+                      
+                      if (result.count != 0) {
+                          
+                          arrayOfTweets = [[NSMutableArray alloc] init];
+                          
+                          for(NSDictionary *item in result) {
+                              
+                              //build arrayOfTweets from result
+                              Tweet *tweet = [[Tweet alloc] init];
+                              tweet.text = [item objectForKey:@"text"];
+                              tweet.status = @"Success";
+                              
+                              [arrayOfTweets addObject:tweet];
+                          }
+                          [self reloadTable];
+                      }
+                  }];
+             }
          }
      }];
 }
@@ -135,37 +171,36 @@
 - (IBAction)postTweet:(id)sender {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
-        [self buildAccountStore];
-    
+        
+        
         [accountStore requestAccessToAccountsWithType:accountType options:nil
-                                  completion:^(BOOL granted, NSError *error)
+                                           completion:^(BOOL granted, NSError *error)
          {
              if (granted == YES)
              {
                  // Get the list of Twitter accounts.
                  NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
-            
+                 
                  if ([accountsArray count] > 0) {
-                
+                     
                      //default to the first one
                      ACAccount *twitterAccount = [accountsArray objectAtIndex:0];
-                
+                     
                      NSString *tweetText = [_tweetText.text stringByReplacingOccurrencesOfString:@"\n" withString:@""];
                      NSDictionary *message = @{@"status": tweetText};
-                
+                     
                      NSURL *requestURL = [NSURL
-                                     URLWithString:@"http://api.twitter.com/1/statuses/update.json"];
-                
+                                          URLWithString:@"http://api.twitter.com/1/statuses/update.json"];
+                     
                      SLRequest *postRequest = [SLRequest
-                                          requestForServiceType:SLServiceTypeTwitter
-                                          requestMethod:SLRequestMethodPOST
-                                          URL:requestURL parameters:message];
-                
+                                               requestForServiceType:SLServiceTypeTwitter
+                                               requestMethod:SLRequestMethodPOST
+                                               URL:requestURL parameters:message];
+                     
                      postRequest.account = twitterAccount;
-                
+                     
                      [postRequest performRequestWithHandler:^(NSData *responseData,
-                                                         NSHTTPURLResponse *urlResponse, NSError *error)
+                                                              NSHTTPURLResponse *urlResponse, NSError *error)
                       {
                           int responseStatusCode = [urlResponse statusCode];
                           NSString *responseString;

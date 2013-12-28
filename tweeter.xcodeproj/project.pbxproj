@@ -23,7 +23,6 @@
 		33996F051868E18A0069C68F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33996EE71868E18A0069C68F /* UIKit.framework */; };
 		33996F0D1868E18A0069C68F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33996F0B1868E18A0069C68F /* InfoPlist.strings */; };
 		33996F0F1868E18A0069C68F /* tweeterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 33996F0E1868E18A0069C68F /* tweeterTests.m */; };
-		33B19568186CEE60008E0C5B /* CustomViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B19567186CEE60008E0C5B /* CustomViewCell.m */; };
 		33B1956B186D0801008E0C5B /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B1956A186D0801008E0C5B /* Tweet.m */; };
 /* End PBXBuildFile section */
 
@@ -59,8 +58,6 @@
 		33996F0A1868E18A0069C68F /* tweeterTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "tweeterTests-Info.plist"; sourceTree = "<group>"; };
 		33996F0C1868E18A0069C68F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		33996F0E1868E18A0069C68F /* tweeterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = tweeterTests.m; sourceTree = "<group>"; };
-		33B19566186CEE60008E0C5B /* CustomViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomViewCell.h; sourceTree = "<group>"; };
-		33B19567186CEE60008E0C5B /* CustomViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomViewCell.m; sourceTree = "<group>"; };
 		33B19569186D0801008E0C5B /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
 		33B1956A186D0801008E0C5B /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,8 +123,6 @@
 		33996EE91868E18A0069C68F /* tweeter */ = {
 			isa = PBXGroup;
 			children = (
-				33B19566186CEE60008E0C5B /* CustomViewCell.h */,
-				33B19567186CEE60008E0C5B /* CustomViewCell.m */,
 				33996EF21868E18A0069C68F /* AppDelegate.h */,
 				33996EF31868E18A0069C68F /* AppDelegate.m */,
 				33996EF51868E18A0069C68F /* Main.storyboard */,
@@ -268,7 +263,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				33996EFA1868E18A0069C68F /* ViewController.m in Sources */,
-				33B19568186CEE60008E0C5B /* CustomViewCell.m in Sources */,
 				33B1956B186D0801008E0C5B /* Tweet.m in Sources */,
 				33996EF41868E18A0069C68F /* AppDelegate.m in Sources */,
 				33996EF01868E18A0069C68F /* main.m in Sources */,

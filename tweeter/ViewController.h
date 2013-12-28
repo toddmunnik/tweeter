@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
+@interface ViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextView *tweetText;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
