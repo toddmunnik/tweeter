@@ -14,7 +14,7 @@
 {
     // Override point for customization after application launch.
     return YES;
-    //just testing
+    //just testing 2
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
